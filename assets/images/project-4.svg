@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 500" width="800" height="500">
+  <!-- Placeholder: Office Network Simulation (Cisco Packet Tracer) -->
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1e3a8a"/>
+      <stop offset="1" stop-color="#0ea5e9"/>
+    </linearGradient>
+  </defs>
+  <rect width="800" height="500" fill="url(#bg)"/>
+  <g stroke="#bfe6ff" stroke-width="4" stroke-opacity=".8">
+    <line x1="400" y1="130" x2="400" y2="250"/>
+    <line x1="400" y1="250" x2="220" y2="370"/><line x1="400" y1="250" x2="400" y2="370"/><line x1="400" y1="250" x2="580" y2="370"/>
+  </g>
+  <rect x="340" y="95" width="120" height="70" rx="14" fill="#fff"/>
+  <circle cx="400" cy="130" r="18" fill="#0ea5e9"/>
+  <rect x="330" y="225" width="140" height="50" rx="12" fill="#fff"/>
+  <g fill="#0ea5e9"><circle cx="360" cy="250" r="6"/><circle cx="385" cy="250" r="6"/><circle cx="410" cy="250" r="6"/><circle cx="435" cy="250" r="6"/></g>
+  <g fill="#fff">
+    <rect x="175" y="345" width="90" height="60" rx="10"/><rect x="355" y="345" width="90" height="60" rx="10"/><rect x="535" y="345" width="90" height="60" rx="10"/>
+  </g>
+  <g fill="#cfe9fb">
+    <rect x="187" y="356" width="66" height="36" rx="5"/><rect x="367" y="356" width="66" height="36" rx="5"/><rect x="547" y="356" width="66" height="36" rx="5"/>
+  </g>
+</svg>
