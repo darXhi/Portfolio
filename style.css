@@ -46,11 +46,27 @@
     --accent-text-2: #c026d3;
     --accent-soft: rgba(109, 93, 252, 0.12);
     --header-bg: rgba(246, 247, 251, 0.7);
+    /* Panel behind the hero text: opaque enough to stay readable over the
+       moving background, without a backdrop-filter (which would repaint every
+       frame while the clouds drift). */
+    --panel-bg: rgba(255, 255, 255, 0.82);
+    --panel-border: rgba(24, 26, 43, 0.12);
     --shadow-sm: 0 2px 10px rgba(24, 26, 43, 0.06);
     --shadow-md: 0 14px 36px rgba(24, 26, 43, 0.1);
     --shadow-lg: 0 24px 60px rgba(24, 26, 43, 0.18);
     --blob-opacity: 0.38;
     --dot-color: rgba(24, 26, 43, 0.09);
+    /* Light-mode clouds: soft white with a faint accent tint underneath.
+       The shape is an SVG of blurred ellipses, tiled and used as a mask. */
+    --cloud-top: rgba(255, 255, 255, 0.95);
+    --cloud-bottom: rgba(214, 228, 255, 0.55);
+    --cloud-shape: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 300' preserveAspectRatio='none'%3E%3Cdefs%3E%3Cfilter id='s' x='-20%25' y='-20%25' width='140%25' height='140%25'%3E%3CfeGaussianBlur stdDeviation='9'/%3E%3C/filter%3E%3C/defs%3E%3Cg fill='%23000' filter='url(%23s)'%3E%3Cellipse cx='110' cy='200' rx='88' ry='44'/%3E%3Cellipse cx='168' cy='163' rx='66' ry='52'/%3E%3Cellipse cx='238' cy='196' rx='78' ry='40'/%3E%3Cellipse cx='300' cy='210' rx='52' ry='28'/%3E%3Cellipse cx='425' cy='168' rx='58' ry='44'/%3E%3Cellipse cx='486' cy='196' rx='82' ry='38'/%3E%3Cellipse cx='536' cy='208' rx='46' ry='28'/%3E%3C/g%3E%3C/svg%3E");
+
+    /* Shooting-star colors (dark mode uses its own, see below) */
+    --neon-1: #6d5dfc;
+    --neon-2: #2bb3d9;
+    --neon-3: #ec4899;
+
 
     /* Typography, sizes, radii */
     --font: 'Poppins', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
@@ -99,11 +115,17 @@
     --accent-glow: rgba(42, 131, 95, 0.35);
     --accent-glow-strong: rgba(42, 131, 95, 0.5);
     --header-bg: rgba(9, 35, 40, 0.65);
+    --panel-bg: rgba(11, 42, 47, 0.8);
+    --panel-border: rgba(255, 255, 255, 0.12);
     --shadow-sm: 0 2px 10px rgba(0, 0, 0, 0.3);
     --shadow-md: 0 14px 36px rgba(0, 0, 0, 0.35);
     --shadow-lg: 0 24px 60px rgba(0, 0, 0, 0.55);
     --blob-opacity: 0.45;
     --dot-color: rgba(255, 255, 255, 0.06);
+    /* Shooting stars: brighter teal/green so they read as light in the dark */
+    --neon-1: #2ee6a8;
+    --neon-2: #5ff2ff;
+    --neon-3: #8bbb92;
 
     color-scheme: dark;
 }
@@ -216,6 +238,10 @@ button {
     z-index: -1;
     overflow: hidden;
     pointer-events: none;
+    /* Own compositor layer: the scroll parallax below then only moves this
+       layer instead of re-rasterizing the heavy blurred blobs every frame. */
+    will-change: transform;
+    transform: translateZ(0);
 }
 
 /* Subtle dot-grid texture on top of the blobs, fading out towards the edges */
@@ -333,6 +359,138 @@ button {
 }
 
 
+/* --------------------------------------------------------------------------
+   3b. SHOOTING STARS (neon meteor field)
+   script.js fills #bg-meteors with .meteor spans and gives each one its own
+   position, length, speed, delay and color through the custom properties
+   below, so no two streaks fall alike. Everything is fixed behind the content
+   and freezes under `prefers-reduced-motion: reduce`.
+   -------------------------------------------------------------------------- */
+.bg-meteors {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+}
+
+.meteor {
+    --angle: 135deg;      /* travel direction: down-left, tail pointing up-right */
+    --len: 140px;         /* length of the tail */
+    --travel: 90vmax;     /* distance covered before it fades out */
+    --thickness: 2px;
+    --color: var(--neon-2);
+    position: absolute;
+    top: var(--y, 0);
+    left: var(--x, 0);
+    width: var(--len);
+    height: var(--thickness);
+    border-radius: var(--thickness);
+    transform-origin: 100% 50%;   /* the head (right end) leads the streak */
+    background: linear-gradient(90deg, transparent, var(--color));
+    filter: drop-shadow(0 0 6px var(--color));
+    opacity: 0;
+    will-change: transform, opacity;
+    animation: meteor-fall var(--dur, 6s) linear var(--delay, 0s) infinite;
+}
+
+/* The bright head of the shooting star */
+.meteor::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    top: 50%;
+    width: calc(var(--thickness) * 2.5);
+    height: calc(var(--thickness) * 2.5);
+    border-radius: 50%;
+    transform: translate(50%, -50%);
+    background: #fff;
+    box-shadow: 0 0 10px 2px var(--color), 0 0 22px 6px var(--color);
+}
+
+@keyframes meteor-fall {
+    0%   { transform: rotate(var(--angle)) translate3d(0, 0, 0); opacity: 0; }
+    8%   { opacity: var(--meteor-opacity, 0.9); }
+    75%  { opacity: var(--meteor-opacity, 0.9); }
+    100% { transform: rotate(var(--angle)) translate3d(var(--travel), 0, 0); opacity: 0; }
+}
+
+/* The shooting stars belong to dark mode; light mode gets the water below */
+:root:not([data-theme="dark"]) .bg-meteors {
+    display: none;
+}
+
+/* --------------------------------------------------------------------------
+   3c. DRIFTING CLOUDS (light mode)
+   Three cloud bands, each masked with the SVG above and tiled three times
+   across its own width, so translating by exactly one tile (-33.333%) loops
+   forever without a seam. They all move left; the nearer, larger band moves
+   fastest, which reads as depth.
+   -------------------------------------------------------------------------- */
+.bg-clouds {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+}
+
+[data-theme="dark"] .bg-clouds {
+    display: none;
+}
+
+.cloud-band {
+    position: absolute;
+    left: -100%;
+    width: 300%;
+    background: linear-gradient(180deg, var(--cloud-top), var(--cloud-bottom));
+    -webkit-mask-image: var(--cloud-shape);
+    mask-image: var(--cloud-shape);
+    -webkit-mask-size: 33.333% 100%;
+    mask-size: 33.333% 100%;
+    -webkit-mask-repeat: repeat-x;
+    mask-repeat: repeat-x;
+    will-change: transform;
+    animation: cloud-drift var(--cloud-dur, 90s) linear infinite;
+}
+
+/* Far away: small, pale and slow */
+.cloud-band--1 {
+    --cloud-dur: 120s;
+    top: 6%;
+    height: 26vh;
+    opacity: 0.5;
+}
+
+/* Middle distance */
+.cloud-band--2 {
+    --cloud-dur: 80s;
+    top: 34%;
+    height: 34vh;
+    opacity: 0.62;
+    animation-delay: -30s;      /* offset so the bands don't line up */
+}
+
+/* Closest: biggest and fastest */
+.cloud-band--3 {
+    --cloud-dur: 55s;
+    bottom: -4%;
+    height: 42vh;
+    opacity: 0.72;
+    animation-delay: -12s;
+}
+
+@keyframes cloud-drift {
+    from { transform: translate3d(0, 0, 0); }
+    to   { transform: translate3d(-33.333%, 0, 0); }   /* exactly one tile: seamless */
+}
+
+/* Nothing should be flying or drifting when the visitor asked for reduced motion */
+@media (prefers-reduced-motion: reduce) {
+    .bg-meteors {
+        display: none;
+    }
+
+    .cloud-band {
+        animation: none;
+    }
+}
 /* ==========================================================================
    4. UTILITIES
    ========================================================================== */
@@ -568,6 +726,46 @@ html:not(.js) .section__title::after {
     transform: rotate(-20deg);
 }
 
+/* Pressed: the button squashes, then spins a full turn while a ring ripples
+   out of it. script.js adds .is-switching for the length of the animation. */
+.theme-toggle {
+    position: relative;
+}
+
+.theme-toggle:active {
+    transform: scale(0.86);
+    transition-duration: var(--t-fast);
+}
+
+.theme-toggle.is-switching {
+    animation: theme-spin 0.6s var(--ease);
+}
+
+.theme-toggle::after {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: 50%;
+    border: 2px solid var(--accent);
+    opacity: 0;
+    pointer-events: none;
+}
+
+.theme-toggle.is-switching::after {
+    animation: theme-ripple 0.6s var(--ease);
+}
+
+@keyframes theme-spin {
+    0%   { transform: rotate(0) scale(1); }
+    35%  { transform: rotate(150deg) scale(0.78); }
+    100% { transform: rotate(360deg) scale(1); }
+}
+
+@keyframes theme-ripple {
+    0%   { opacity: 0.85; transform: scale(0.9); }
+    100% { opacity: 0; transform: scale(2.1); }
+}
+
 /* Which icon shows depends on the active theme */
 .theme-toggle .icon-sun,
 [data-theme="dark"] .theme-toggle .icon-moon {
@@ -662,6 +860,17 @@ html:not(.js) .section__title::after {
     transition: border-color var(--t) var(--ease);
 }
 
+/* The hero text sits on its own block so it stays readable over the animated
+   background in both themes. */
+.home__content {
+    padding: clamp(1.5rem, 3vw, 2.25rem) clamp(1.5rem, 3vw, 2.5rem);
+    border: 1px solid var(--panel-border);
+    border-radius: var(--radius-lg);
+    background: var(--panel-bg);
+    box-shadow: var(--shadow-md);
+    transition: var(--theme-transition);
+}
+
 .home__name {
     font-size: clamp(2.1rem, 5vw, 3.6rem);
     font-weight: 800;
@@ -741,7 +950,8 @@ html:not(.js) .typing__text::after {
 
 .home__intro {
     max-width: 540px;
-    color: var(--text-muted);
+    color: var(--text);
+    opacity: 0.86;
     font-size: 1.05rem;
 }
 
@@ -1319,6 +1529,10 @@ html:not(.js) .typing__text::after {
 
     .home__photo-wrap {
         width: clamp(200px, 60vw, 260px);
+    }
+
+    .home__content {
+        width: 100%;       /* the block spans the column instead of hugging the text */
     }
 
     .home__role {

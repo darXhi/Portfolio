@@ -24,8 +24,8 @@
 const PROJECTS = [
     {
         title: 'Small Business Point of Sale App',
-        image: './assets/images/project-1.svg',
-        tags: ['PHP', 'MySQL', 'JavaScript'],
+        image: './assets/images/PassingLab.png',
+        tags: ['Next.js', 'Supabase'],
         description: [
             'A web-based cashier app that helps small business owners record sales quickly, without needing expensive point-of-sale hardware.',
             'Key features include product and stock management, a shopping cart, receipt printing, and exportable daily and monthly sales reports.',
@@ -33,9 +33,9 @@ const PROJECTS = [
         ],
     },
     {
-        title: 'Online Attendance System',
-        image: './assets/images/project-2.svg',
-        tags: ['HTML', 'CSS', 'PHP'],
+        title: 'Binus Marketplace',
+        image: './assets/images/Binus Marketplace.png',
+        tags: ['Nest.js', 'React Native'],
         description: [
             'An online attendance system for schools or small offices that replaces paper-based attendance. Users can check in and check out from a browser on any device.',
             'Admins get a dashboard to monitor attendance in real time, see who is late, on leave, or absent, and manage user data with ease.',
@@ -118,11 +118,22 @@ applyTheme(root.getAttribute('data-theme') === 'dark' ? 'dark' : 'light');
 themeToggle.addEventListener('click', () => {
     const next = root.getAttribute('data-theme') === 'dark' ? 'light' : 'dark';
     applyTheme(next);
+
+    // Replay the spin + ripple animation on every press (removing the class and
+    // forcing a reflow restarts it even when the button is clicked rapidly)
+    themeToggle.classList.remove('is-switching');
+    void themeToggle.offsetWidth;
+    themeToggle.classList.add('is-switching');
+
     try {
         localStorage.setItem(THEME_KEY, next);
     } catch {
         /* localStorage unavailable: the theme still switches, it just isn't saved */
     }
+});
+
+themeToggle.addEventListener('animationend', (event) => {
+    if (event.animationName === 'theme-spin') themeToggle.classList.remove('is-switching');
 });
 
 // Follow OS theme changes as long as the user hasn't picked a theme manually
@@ -183,6 +194,53 @@ const sections = navLinks
     .filter(Boolean);
 const bgLayer = document.getElementById('bg-animated');
 const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+
+/* --------------------------------------------------------------------------
+   Shooting stars: fills #bg-meteors with streaks that fall diagonally across
+   the background. Each one gets its own start point, length, speed, delay and
+   color so the field never looks like a repeating pattern. Skipped entirely
+   when the visitor prefers reduced motion, and rebuilt (debounced) on resize
+   so the count matches the screen size.
+   -------------------------------------------------------------------------- */
+const meteorLayer = document.getElementById('bg-meteors');
+const METEOR_COLORS = ['var(--neon-1)', 'var(--neon-2)', 'var(--neon-3)'];
+
+const random = (min, max) => min + Math.random() * (max - min);
+
+function buildMeteors() {
+    if (!meteorLayer || prefersReducedMotion) return;
+
+    // Roughly one streak per 90px of width, kept within sane bounds
+    const count = Math.round(Math.min(Math.max(window.innerWidth / 90, 12), 40));
+    const meteors = document.createDocumentFragment();
+
+    for (let i = 0; i < count; i++) {
+        const meteor = document.createElement('span');
+        meteor.className = 'meteor';
+        // Start above/right of the viewport so they fly in from off-screen
+        meteor.style.setProperty('--x', `${random(-10, 110).toFixed(1)}%`);
+        meteor.style.setProperty('--y', `${random(-30, 70).toFixed(1)}%`);
+        meteor.style.setProperty('--angle', `${random(125, 145).toFixed(1)}deg`);
+        meteor.style.setProperty('--len', `${Math.round(random(70, 220))}px`);
+        meteor.style.setProperty('--thickness', `${random(1, 2.4).toFixed(1)}px`);
+        meteor.style.setProperty('--travel', `${Math.round(random(70, 120))}vmax`);
+        meteor.style.setProperty('--dur', `${random(3.5, 9).toFixed(2)}s`);
+        meteor.style.setProperty('--delay', `-${random(0, 9).toFixed(2)}s`); // negative: the field is already in motion on load
+        meteor.style.setProperty('--color', METEOR_COLORS[i % METEOR_COLORS.length]);
+        meteors.appendChild(meteor);
+    }
+
+    meteorLayer.replaceChildren(meteors);
+}
+
+buildMeteors();
+
+let meteorResizeTimer = null;
+window.addEventListener('resize', () => {
+    clearTimeout(meteorResizeTimer);
+    meteorResizeTimer = setTimeout(buildMeteors, 300);
+});
 
 // When a menu link is clicked, the target section is "locked" until the smooth
 // scroll finishes, so the underline doesn't flicker through the sections in between.
