@@ -953,6 +953,13 @@ html:not(.js) .section__title::after {
     transition: var(--theme-transition), transform var(--t) var(--ease);
 }
 
+/* Inline SVG logos (Linktree) match the size and color of the icon-font logos */
+.home__social-link svg {
+    width: 1em;
+    height: 1em;
+    fill: currentColor;
+}
+
 .home__social-link:hover,
 .home__social-link:focus-visible {
     background: var(--accent-gradient);
