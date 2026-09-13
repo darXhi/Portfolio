@@ -175,8 +175,13 @@ const random = (min, max) => min + Math.random() * (max - min);
 function buildMeteors() {
     if (!meteorLayer || prefersReducedMotion) return;
 
-    // Roughly one streak per 90px of width, kept within sane bounds
-    const count = Math.round(Math.min(Math.max(window.innerWidth / 90, 12), 40));
+    // Roughly one streak per 90px of width, kept within sane bounds. Phones get
+    // noticeably fewer: every streak is its own animated layer, and that is what
+    // makes the background expensive on a weak GPU.
+    const isSmall = window.innerWidth < 900 || window.matchMedia('(hover: none)').matches;
+    const count = isSmall
+        ? Math.round(Math.min(Math.max(window.innerWidth / 130, 8), 14))
+        : Math.round(Math.min(Math.max(window.innerWidth / 90, 12), 40));
     const meteors = document.createDocumentFragment();
 
     for (let i = 0; i < count; i++) {

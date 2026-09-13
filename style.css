@@ -16,6 +16,7 @@
    10. Footer
    11. Scroll animations & reduced motion
    12. Responsive: tablet (768px-1024px) & mobile (<768px)
+   13. Mobile / touch performance
    ========================================================================== */
 
 
@@ -1676,5 +1677,79 @@ html:not(.js) .typing__text::after {
 
     .bg-blob--4 {
         display: none;
+    }
+}
+
+
+/* ==========================================================================
+   13. MOBILE / TOUCH PERFORMANCE
+   Phones have far less GPU fill rate than a laptop, and three things in this
+   design are expensive there: backdrop-filter (the blurred glass has to be
+   recomputed every frame while the background moves underneath it), animating
+   background-color on a 46vmax layer that is blurred by 90px (each color step
+   repaints and re-blurs the whole layer), and scaling that same blurred layer
+   (a scale cannot be done by the compositor alone, so it re-rasterizes).
+   Below, all three are dropped on touch devices and small screens; the design
+   still reads the same, it just stops repainting.
+   ========================================================================== */
+@media (max-width: 900px), (hover: none) {
+    /* 1. No live glass: use the opaque panel colors instead */
+    .header,
+    .skills__panel,
+    .about__panel,
+    .project-card,
+    .contact__card,
+    .nav__menu,
+    .modal__dialog {
+        -webkit-backdrop-filter: none;
+        backdrop-filter: none;
+    }
+
+    :root {
+        --surface: rgba(255, 255, 255, 0.9);
+        --header-bg: rgba(246, 247, 251, 0.94);
+    }
+
+    [data-theme="dark"] {
+        --surface: rgba(14, 50, 54, 0.9);
+        --header-bg: rgba(9, 35, 40, 0.94);
+    }
+
+    /* 2. No color cycling on the blobs - drift only, and a cheaper blur */
+    .bg-blob,
+    [data-theme="dark"] .bg-blob {
+        filter: blur(60px);
+        animation-name: blob-drift-flat;
+        animation-duration: 30s;
+    }
+
+    .bg-blob--2,
+    [data-theme="dark"] .bg-blob--2 {
+        animation-name: blob-drift-flat-2;
+    }
+
+    /* 3. Translate only, never scale: keeps it on the compositor */
+    @keyframes blob-drift-flat {
+        0%   { transform: translate3d(0, 0, 0); }
+        100% { transform: translate3d(18vw, 30vh, 0); }
+    }
+
+    @keyframes blob-drift-flat-2 {
+        0%   { transform: translate3d(0, 0, 0); }
+        100% { transform: translate3d(-16vw, 18vh, 0); }
+    }
+
+    /* Fewer, simpler moving parts in the background layer */
+    .bg-blob--3 {
+        display: none;
+    }
+
+    .cloud-band--2 {
+        display: none;
+    }
+
+    /* drop-shadow on every streak is the expensive part; the head keeps its glow */
+    .meteor {
+        filter: none;
     }
 }
