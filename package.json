@@ -1,0 +1,11 @@
+{
+  "name": "portfolio",
+  "private": true,
+  "description": "Portfolio of Muhammad Haidar Hakim (darXhi)",
+  "scripts": {
+    "minify": "esbuild style.css --minify --outfile=style.min.css && esbuild script.js --minify --outfile=script.min.js"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.10"
+  }
+}

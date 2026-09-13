@@ -81,18 +81,26 @@
         })();
     </script>
 
+    <!-- The hero photo is the LCP element: start fetching it immediately -->
+    <link rel="preload" as="image" href="./assets/images/profile-hero.webp" fetchpriority="high">
+
     <!-- Favicon -->
     <link rel="icon" href="./assets/images/favicon.svg" type="image/svg+xml">
-    <!-- Font: Poppins -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <!-- Remixicon (icons) -->
-    <link href="https://cdn.jsdelivr.net/npm/remixicon@4.9.0/fonts/remixicon.css" rel="stylesheet">
-    <!-- CSS -->
-    <link rel="stylesheet" href="./style.css">
+    <!-- Font: Poppins is self-hosted (see section 0 of style.css). Only the two
+         weights used above the fold are preloaded; the rest load on demand. -->
+    <link rel="preload" as="font" type="font/woff2" href="./assets/fonts/poppins-400.woff2" crossorigin>
+    <link rel="preload" as="font" type="font/woff2" href="./assets/fonts/poppins-800.woff2" crossorigin>
+    <!-- CSS (minified build of style.css - regenerate with `npm run minify`) -->
+    <link rel="stylesheet" href="./style.min.css">
+    <!-- Remixicon (decorative icons): loaded without blocking the first paint.
+         The media/onload trick makes the browser fetch it at low priority and
+         apply it once it arrives; <noscript> keeps it working without JS. -->
+    <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.9.0/fonts/remixicon.css"
+          media="print" onload="this.media='all'">
+    <noscript><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/remixicon@4.9.0/fonts/remixicon.css"></noscript>
     <!-- Script -->
-    <script src="./script.js" defer></script>
+    <script src="./script.min.js" defer></script>
 </head>
 <body>
     <a class="skip-link" href="#home">Skip to main content</a>
@@ -152,7 +160,7 @@
                 <div class="home__visual" data-reveal="zoom">
                     <div class="home__photo-wrap">
                         <!-- REPLACE: put your photo in assets/images/ and update the src below (e.g. profile.jpg) -->
-                        <img src="./assets/images/FotoPort.jpeg" alt="Profile photo of Muhammad Haidar Hakim" class="home__photo" width="400" height="400">
+                        <img src="./assets/images/profile-hero.webp" alt="Profile photo of Muhammad Haidar Hakim" class="home__photo" width="400" height="400" fetchpriority="high" decoding="async">
                     </div>
                 </div>
 

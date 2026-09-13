@@ -7,8 +7,11 @@ A responsive personal portfolio website with a light/dark theme and an animated 
 ```
 Portfolio/
 ├── index.html           # Page structure (semantic HTML)
-├── style.css            # All styling + light/dark design tokens
-├── script.js            # Theme, navbar, scroll effects, projects & modal
+├── style.css            # All styling + light/dark design tokens (source)
+├── script.js            # Theme, navbar, scroll effects, projects & modal (source)
+├── style.min.css        # Minified build - this is what index.html loads
+├── script.min.js        # Minified build - this is what index.html loads
+├── package.json         # Only holds the `minify` script (no framework, no build on deploy)
 ├── robots.txt           # Lets crawlers index the site, points to the sitemap
 ├── sitemap.xml          # Single-page sitemap for search engines
 └── assets/
@@ -28,6 +31,17 @@ python -m http.server 5500
 
 > For hosting, upload `index.html`, `style.css`, `script.js` and `assets/` to the
 > web root (`public_html` on cPanel). `index.html` must sit directly in the root.
+
+## After editing `style.css` or `script.js`
+
+`index.html` loads the minified files, so regenerate them before deploying:
+
+```bash
+npm install     # once, pulls in esbuild
+npm run minify
+```
+
+Vercel serves the files as they are and runs no build of its own.
 
 ## Customizing
 

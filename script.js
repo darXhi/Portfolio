@@ -24,7 +24,7 @@
 const PROJECTS = [
     {
         title: 'PassingLab',
-        image: './assets/images/PassingLab.png',
+        image: './assets/images/passinglab.webp',
         tags: ['Next.js', 'Supabase'],
         description: [
             'PassingLab is an educational platform developed in 2026 together with a teammate. It supports students who intend to continue their studies at universities in Indonesia.',
@@ -34,7 +34,7 @@ const PROJECTS = [
     },
     {
         title: 'Binus Marketplace',
-        image: './assets/images/Binus Marketplace.png',
+        image: './assets/images/binus-marketplace.webp',
         tags: ['Nest.js', 'React Native'],
         description: [
             'An online attendance system for schools or small offices that replaces paper-based attendance. Users can check in and check out from a browser on any device.',
@@ -220,16 +220,29 @@ function setActiveLink(id) {
     });
 }
 
-function getCurrentSectionId() {
-    const scrollBottom = window.scrollY + window.innerHeight;
-    if (scrollBottom >= document.documentElement.scrollHeight - 2) {
-        return sections[sections.length - 1].id;
-    }
+/* Layout values used on every scroll frame are measured once here instead of
+   inside the scroll handler: reading offsetHeight / getBoundingClientRect()
+   while scrolling forces the browser to recalculate layout mid-frame (the
+   "forced reflow" Lighthouse reports). They are refreshed whenever the page
+   can actually change size. */
+let metrics = { max: 0, line: 0, tops: [] };
 
-    const readingLine = header.offsetHeight + window.innerHeight * 0.3;
+function measure() {
+    const viewport = window.innerHeight;
+    metrics = {
+        max: document.documentElement.scrollHeight - viewport,
+        line: header.offsetHeight + viewport * 0.3,   // the "reading line"
+        tops: sections.map((section) => section.offsetTop),
+    };
+}
+
+function getCurrentSectionId(scrollY) {
+    if (scrollY >= metrics.max - 2) return sections[sections.length - 1].id;
+
+    const line = scrollY + metrics.line;
     let currentId = sections[0].id;
-    for (const section of sections) {
-        if (section.getBoundingClientRect().top <= readingLine) currentId = section.id;
+    for (let i = 0; i < sections.length; i++) {
+        if (metrics.tops[i] <= line) currentId = sections[i].id;
     }
     return currentId;
 }
@@ -252,10 +265,10 @@ navLinks.forEach((link) => {
 });
 
 function onScroll() {
-    const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
-    const progress = maxScroll > 0 ? Math.min(window.scrollY / maxScroll, 1) : 0;
+    const scrollY = window.scrollY;
+    const progress = metrics.max > 0 ? Math.min(scrollY / metrics.max, 1) : 0;
 
-    header.classList.toggle('is-scrolled', window.scrollY > 8);
+    header.classList.toggle('is-scrolled', scrollY > 8);
     header.style.setProperty('--progress', progress.toFixed(4)); // scroll progress bar
 
     // Background parallax: the color blobs drift up slowly as you scroll
@@ -266,7 +279,7 @@ function onScroll() {
     if (lockedSectionId) {
         releaseLockAfter(150); // still scrolling -> keep the lock
     } else {
-        setActiveLink(getCurrentSectionId());
+        setActiveLink(getCurrentSectionId(scrollY));
     }
 }
 
@@ -281,8 +294,17 @@ window.addEventListener('scroll', () => {
     });
 }, { passive: true });
 
-window.addEventListener('resize', onScroll);
-window.addEventListener('load', onScroll);
+// Re-measure (not just re-run) whenever the layout can have changed
+window.addEventListener('resize', () => {
+    measure();
+    onScroll();
+});
+window.addEventListener('load', () => {
+    measure();
+    onScroll();
+});
+
+measure();
 onScroll();
 
 
