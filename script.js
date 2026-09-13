@@ -35,14 +35,11 @@ const PROJECTS = [
     {
         title: 'Binus Marketplace',
         image: './assets/images/binus-marketplace.webp',
-        tags: ['Nest.js', 'React Native'],
+        tags: ['Flutter', 'Nest.js'],
         description: [
-            'An online attendance system for schools or small offices that replaces paper-based attendance. Users can check in and check out from a browser on any device.',
-            'Admins get a dashboard to monitor attendance in real time, see who is late, on leave, or absent, and manage user data with ease.',
-            'Every attendance record is timestamped, so monthly attendance reports can be generated automatically and downloaded for administration or payroll.',
-            'On the security side, the system uses session-based authentication, server-side input validation, and separate access rights for admins and regular users.',
-            'The interface is fully responsive so it is comfortable to use on smartphones, since most users check in from their phones.',
-            'Planned improvements include location-based attendance (geofencing) and automatic reminder notifications before the start of the workday.',
+            'B-Market is a mobile e-commerce application created specifically for BINUS students to facilitate the buying and selling of goods and services.',
+            'The concept came from my experience seeing various buying and selling posts mixed with other information in BINUS student groups, which inspired me to propose a dedicated marketplace for the BINUS community.',
+            'As part of a Software Engineering and Software Architecture course project, our team developed the application using Flutter for the frontend and NestJS for the backend.',
         ],
     },
 ];
