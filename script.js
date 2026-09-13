@@ -45,42 +45,6 @@ const PROJECTS = [
             'Planned improvements include location-based attendance (geofencing) and automatic reminder notifications before the start of the workday.',
         ],
     },
-    {
-        title: 'Daily Task Manager',
-        image: './assets/images/project-3.svg',
-        tags: ['HTML', 'CSS', 'JavaScript'],
-        description: [
-            'A simple to-do list app for organizing daily tasks. Tasks can be added, marked as done, edited, and deleted.',
-            'Data is saved in localStorage, so the task list survives closing the browser without needing a server or database.',
-        ],
-    },
-    {
-        title: 'Office Network Simulation',
-        image: './assets/images/project-4.svg',
-        tags: ['Cisco Packet Tracer', 'Networking'],
-        description: [
-            'Design and simulation of a small office network topology using Cisco Packet Tracer.',
-            'Covers router and switch configuration, VLANs to separate departments, a DHCP server, and connectivity testing between devices with ping and traceroute.',
-        ],
-    },
-    {
-        title: 'Schedule Reminder Bot',
-        image: './assets/images/project-5.svg',
-        tags: ['Python', 'Automation'],
-        description: [
-            'A simple Python bot that automatically sends reminders for class schedules and assignment deadlines.',
-            'Schedules are read from a configuration file, so they can be updated without touching the code.',
-        ],
-    },
-    {
-        title: 'Personal Portfolio Website',
-        image: './assets/images/project-6.svg',
-        tags: ['HTML', 'CSS', 'JavaScript'],
-        description: [
-            'The responsive portfolio website you are looking at right now, built with HTML, CSS, and JavaScript without any framework.',
-            'It features a light/dark theme saved in localStorage, an animated background, scroll-spy navigation, scroll animations, and an accessible project detail modal.',
-        ],
-    },
 ];
 
 
