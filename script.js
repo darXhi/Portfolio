@@ -266,6 +266,29 @@ navLinks.forEach((link) => {
     });
 });
 
+// In-page links (navbar, logo, buttons, skip link) scroll to their section
+// without adding "#section" to the URL. scrollIntoView still honors the CSS
+// smooth scrolling and the scroll-padding for the sticky navbar.
+document.addEventListener('click', (event) => {
+    const link = event.target.closest('a[href^="#"]');
+    if (!link) return;
+    const target = document.getElementById(link.hash.slice(1));
+    if (!target) return;
+
+    event.preventDefault();
+    target.scrollIntoView();
+
+    // Keep keyboard focus moving to the section, like a normal anchor jump
+    if (!target.hasAttribute('tabindex')) target.setAttribute('tabindex', '-1');
+    target.focus({ preventScroll: true });
+});
+
+// A URL opened with a hash (e.g. an old shared link) still jumps to that
+// section, but the hash is removed from the address bar right away.
+if (location.hash) {
+    history.replaceState(null, '', location.pathname + location.search);
+}
+
 function onScroll() {
     const scrollY = window.scrollY;
     const progress = metrics.max > 0 ? Math.min(scrollY / metrics.max, 1) : 0;
