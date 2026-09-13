@@ -23,13 +23,13 @@
    ========================================================================== */
 const PROJECTS = [
     {
-        title: 'Small Business Point of Sale App',
+        title: 'PassingLab',
         image: './assets/images/PassingLab.png',
         tags: ['Next.js', 'Supabase'],
         description: [
-            'A web-based cashier app that helps small business owners record sales quickly, without needing expensive point-of-sale hardware.',
-            'Key features include product and stock management, a shopping cart, receipt printing, and exportable daily and monthly sales reports.',
-            'The biggest challenge in this project was keeping the checkout flow simple for users who are not used to digital apps.',
+            'PassingLab is an educational platform developed in 2026 together with a teammate. It supports students who intend to continue their studies at universities in Indonesia.',
+            'The project was initially built with Laravel as a full-stack framework. However, as Laravel required a considerable amount of memory resources, we migrated the platform to Next.js, which proved to be more efficient and more scalable for our long-term requirements.',
+            'The platform is publicly accessible at https://passinglab.id/.',
         ],
     },
     {

@@ -1,0 +1,6 @@
+# Allow every crawler to index the whole site
+User-agent: *
+Allow: /
+
+# REPLACE: use your real domain here
+Sitemap: https://your-domain.com/sitemap.xml
