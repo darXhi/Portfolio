@@ -8,6 +8,7 @@
     4. Utilities (container, section, button, tag)
     5. Header / navbar
     6. Home
+   6b. About
     7. Skills
     8. Projects & modal
     9. Contact
@@ -960,6 +961,80 @@ html:not(.js) .typing__text::after {
     flex-wrap: wrap;
     gap: 1rem;
     margin-top: 2rem;
+}
+
+
+/* ==========================================================================
+   6b. ABOUT
+   One panel with the intro paragraph and a short list of facts. Same glass
+   treatment as the Skills panel so the two sections read as a pair.
+   ========================================================================== */
+.about__panel {
+    max-width: 760px;
+    margin-inline: auto;
+    padding: clamp(1.75rem, 4vw, 3rem);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    background: var(--surface);
+    -webkit-backdrop-filter: var(--glass);
+    backdrop-filter: var(--glass);
+    box-shadow: var(--shadow-md);
+}
+
+.about__text {
+    font-size: 1.05rem;
+    color: var(--text);
+    opacity: 0.9;
+}
+
+.about__facts {
+    display: grid;
+    gap: 1rem;
+    margin-top: 2rem;
+    list-style: none;
+}
+
+/* Icon on the left, label above value on the right */
+.about__fact {
+    display: grid;
+    grid-template-columns: auto 1fr;
+    align-items: center;
+    column-gap: 1rem;
+    padding: 0.9rem 1.1rem;
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    background: var(--surface-2);
+    transition: var(--theme-transition), transform var(--t) var(--ease);
+}
+
+.about__fact:hover {
+    transform: translateX(6px);
+    border-color: var(--accent);
+}
+
+.about__fact-icon {
+    grid-row: span 2;
+    display: grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 12px;
+    background: var(--accent-gradient);
+    color: var(--on-accent);
+    font-size: 1.25rem;
+}
+
+.about__fact-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--accent-text);
+}
+
+.about__fact-value {
+    font-weight: 500;
+    line-height: 1.45;
 }
 
 

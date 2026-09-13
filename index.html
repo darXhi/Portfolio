@@ -67,6 +67,7 @@
             <!-- Main menu. The .active class (underline) is set automatically by the scroll-spy in script.js -->
             <ul class="nav__menu" id="nav-menu">
                 <li><a href="#home" class="nav__link nav__link--home active" aria-current="location">Home</a></li>
+                <li><a href="#about" class="nav__link">About</a></li>
                 <li><a href="#skills" class="nav__link">Skills</a></li>
                 <li><a href="#projects" class="nav__link">Projects</a></li>
                 <li><a href="#contact" class="nav__link">Contact</a></li>
@@ -124,6 +125,42 @@
 
         <!-- ================= SKILLS ================= -->
         <!-- Single column: Soft Skills on top, Hard Skills below. Items are plain icon + text. -->
+        <!-- ================= ABOUT ================= -->
+        <section class="section about" id="about" aria-labelledby="about-title">
+            <div class="container">
+                <header class="section__header" data-reveal="blur">
+                    <h2 class="section__title" id="about-title">About Me</h2>
+                    <p class="section__subtitle">Sedikit tentang saya dan apa yang sedang saya tekuni.</p>
+                </header>
+
+                <div class="about__panel" data-reveal="up">
+                    <p class="about__text">
+                        Saya saat ini merupakan seorang mahasiswa yang menjenjang pendidikan S1 di
+                        BINUS University dengan program studi Computer Science. Saya punya dedikasi
+                        yang tinggi untuk menjadi seorang developer, khususnya software engineer.
+                    </p>
+
+                    <ul class="about__facts" data-stagger>
+                        <li class="about__fact" data-reveal="up">
+                            <span class="about__fact-icon"><i class="ri-graduation-cap-line" aria-hidden="true"></i></span>
+                            <span class="about__fact-label">Pendidikan</span>
+                            <span class="about__fact-value">S1 Computer Science, BINUS University</span>
+                        </li>
+                        <li class="about__fact" data-reveal="up">
+                            <span class="about__fact-icon"><i class="ri-code-s-slash-line" aria-hidden="true"></i></span>
+                            <span class="about__fact-label">Fokus</span>
+                            <span class="about__fact-value">Software Engineering</span>
+                        </li>
+                        <li class="about__fact" data-reveal="up">
+                            <span class="about__fact-icon"><i class="ri-rocket-2-line" aria-hidden="true"></i></span>
+                            <span class="about__fact-label">Status</span>
+                            <span class="about__fact-value">Terbuka untuk kolaborasi &amp; peluang baru</span>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
         <section class="section skills" id="skills" aria-labelledby="skills-title">
             <div class="container">
                 <header class="section__header" data-reveal="blur">
