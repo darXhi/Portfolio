@@ -2,5 +2,4 @@
 User-agent: *
 Allow: /
 
-# REPLACE: use your real domain here
 Sitemap: https://darxhi.my.id/sitemap.xml
